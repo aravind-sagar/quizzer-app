@@ -1,6 +1,6 @@
-# Quizzer App
-
-A modern, interactive quiz application built with Next.js 14, featuring CSV data upload, persistent cloud storage, and Google Authentication.
+<img width="3780" height="1890" alt="Quizzer" src="https://github.com/user-attachments/assets/3593148e-2403-4d61-8e5d-f9ae537f9b92" />
+  
+**A modern, interactive quiz application built with Next.js 14, featuring CSV data upload, persistent cloud storage, and Google Authentication.**
 
 ## 🚀 Features
 
