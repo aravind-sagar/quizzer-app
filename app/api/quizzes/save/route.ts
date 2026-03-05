@@ -12,8 +12,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, questions, id } = body;
 
-    if (!title || !questions || !Array.isArray(questions)) {
+    if (!title || typeof title !== "string" || !questions || !Array.isArray(questions)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    }
+
+    if (title.trim().length === 0 || title.length > 200) {
+      return NextResponse.json({ error: "Title must be between 1 and 200 characters" }, { status: 400 });
+    }
+
+    if (questions.length > 500) {
+      return NextResponse.json({ error: "Quiz cannot have more than 500 questions" }, { status: 400 });
     }
 
     let quiz;
@@ -34,16 +42,15 @@ export async function POST(req: Request) {
         quiz = await prisma.quiz.update({
             where: { id },
             data: {
-                title,
+                title: title.trim(),
                 questions: questions as any,
-                isPublic: false // default or keep existing? resetting for safe default
             }
         });
     } else {
         // Create new
         quiz = await prisma.quiz.create({
             data: {
-                title,
+                title: title.trim(),
                 questions: questions as any,
                 ownerId: session.user.id,
                 isPublic: false,

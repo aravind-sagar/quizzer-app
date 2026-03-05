@@ -5,34 +5,26 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const session = await auth();
-    console.log("List API Session:", JSON.stringify(session, null, 2));
 
     if (!session?.user?.id) {
-      console.log("List API: Unauthorized - missing user ID");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    
-    // Since questions is JSON, we can't easily count it with Prisma select _count for a JSON array.
-    // We'll simplisticly fetch needed fields.
-    // Optimization: Store questionCount in DB trigger or app logic. 
-    // For MVP, fetching all and mapping is fine for small scale, but fetching "questions" blob for list is heavy.
-    // Let's refactor to just fetch everything for now as MVP.
-    
-    const quizzesWithCount = await prisma.quiz.findMany({
-       where: { ownerId: session.user.id },
-       orderBy: { createdAt: 'desc' }
+    const quizzes = await prisma.quiz.findMany({
+      where: { ownerId: session.user.id },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, createdAt: true, questions: true },
     });
 
-    const mapped = quizzesWithCount.map(q => {
-        const questions = q.questions as any as any[]; // Cast Json to array
-        return {
-            id: q.id,
-            title: q.title,
-            createdAt: q.createdAt,
-            questionCount: Array.isArray(questions) ? questions.length : 0,
-            questions: questions
-        };
+    const mapped = quizzes.map((q) => {
+      const questions = Array.isArray(q.questions) ? (q.questions as unknown[]) : [];
+      return {
+        id: q.id,
+        title: q.title,
+        createdAt: q.createdAt,
+        questionCount: questions.length,
+        questions,
+      };
     });
 
     return NextResponse.json({ quizzes: mapped });

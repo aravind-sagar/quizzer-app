@@ -208,8 +208,7 @@ export default function QuizApp() {
           .filter((o: string) => o.length > 0);
 
         if (optionsList.length < 2 && rawOptions.includes(",")) {
-            // Fallback for commas if not split by ;
-            // optionsList = rawOptions.split(',').map(o => o.trim());
+            // Comma-delimited fallback not used; options should be semicolon-separated
         }
 
         const correctText = row[ansKey].trim();
