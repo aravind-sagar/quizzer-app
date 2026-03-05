@@ -608,12 +608,10 @@ export default function QuizApp() {
             </div>
           )}
         </div>
-        </div>
       </div>
+    </div>
+    </>
     );
-  }
-  </>
-  );
   }
   if (viewState === "dashboard") {
     return (
@@ -828,6 +826,7 @@ export default function QuizApp() {
           </div>
         </div>
       </div>
+    </>
     );
   }
 
@@ -891,6 +890,7 @@ export default function QuizApp() {
           </div>
         </div>
       </div>
+    </>
     );
   }
 
@@ -970,6 +970,7 @@ export default function QuizApp() {
           </div>
         </div>
       </div>
+    </>
     );
   }
 
@@ -1159,5 +1160,6 @@ export default function QuizApp() {
         </div>
       </div>
     </div>
+    </>
   );
 }
