@@ -2,6 +2,8 @@
   
 **A modern, interactive quiz application built with Next.js 14, featuring CSV data upload, persistent cloud storage, and Google Authentication.**
 
+### 🌐 [Try it out here!](https://acequizzer.vercel.app/)
+
 ## 🚀 Features
 
 *   **CSV Upload**: Instantly generate quizzes by uploading simple CSV files.
