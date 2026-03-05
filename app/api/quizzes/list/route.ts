@@ -13,7 +13,15 @@ export async function GET() {
     const quizzes = await prisma.quiz.findMany({
       where: { ownerId: session.user.id },
       orderBy: { createdAt: "desc" },
-      select: { id: true, title: true, createdAt: true, questions: true },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        questions: true,
+        visibility: true,
+        shareToken: true,
+        allowedEmails: true,
+      },
     });
 
     const mapped = quizzes.map((q) => {

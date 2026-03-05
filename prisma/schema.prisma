@@ -54,13 +54,15 @@ model VerificationToken {
 }
 
 model Quiz {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  isPublic    Boolean  @default(false)
-  questions   Json
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  visibility    String   @default("private")
+  shareToken    String?  @unique
+  allowedEmails Json     @default("[]")
+  questions     Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
   ownerId     String
   owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)

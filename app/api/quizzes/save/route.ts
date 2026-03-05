@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, questions, id } = body;
+    const { title, description, questions, id } = body;
 
     if (!title || typeof title !== "string" || !questions || !Array.isArray(questions)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
@@ -27,35 +27,32 @@ export async function POST(req: Request) {
     let quiz;
 
     if (id) {
-        // Update existing
-        // Check ownership first
-        const existing = await prisma.quiz.findUnique({ where: { id } });
-        
-        if (!existing) {
-             return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
-        }
-        
-        if (existing.ownerId !== session.user.id) {
-             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-        }
+      const existing = await prisma.quiz.findUnique({ where: { id } });
+      if (!existing) {
+        return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
+      }
+      if (existing.ownerId !== session.user.id) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
 
-        quiz = await prisma.quiz.update({
-            where: { id },
-            data: {
-                title: title.trim(),
-                questions: questions as any,
-            }
-        });
+      quiz = await prisma.quiz.update({
+        where: { id },
+        data: {
+          title: title.trim(),
+          description: description?.trim() || null,
+          questions: questions as any,
+        },
+      });
     } else {
-        // Create new
-        quiz = await prisma.quiz.create({
-            data: {
-                title: title.trim(),
-                questions: questions as any,
-                ownerId: session.user.id,
-                isPublic: false,
-            },
-        });
+      quiz = await prisma.quiz.create({
+        data: {
+          title: title.trim(),
+          description: description?.trim() || null,
+          questions: questions as any,
+          ownerId: session.user.id,
+          visibility: "private",
+        },
+      });
     }
 
     return NextResponse.json({ quiz }, { status: 200 });

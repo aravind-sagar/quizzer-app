@@ -10,8 +10,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Purple Quiz Master",
-  description: "Gamified generic quiz platform",
+  title: "Quizzer",
+  description: "Easy Quiz Generator",
 };
 
 export default function RootLayout({
