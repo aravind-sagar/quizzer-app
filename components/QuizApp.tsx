@@ -50,6 +50,7 @@ export default function QuizApp() {
   const [savedQuizzes, setSavedQuizzes] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isLoadingQuizzes, setIsLoadingQuizzes] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +61,7 @@ export default function QuizApp() {
   }, [session, viewState]);
 
   const fetchQuizzes = async () => {
+    setIsLoadingQuizzes(true);
     try {
       const res = await fetch("/api/quizzes/list");
       const data = await res.json();
@@ -68,6 +70,8 @@ export default function QuizApp() {
       }
     } catch (e) {
       console.error("Failed to list quizzes", e);
+    } finally {
+      setIsLoadingQuizzes(false);
     }
   };
 
@@ -367,11 +371,16 @@ export default function QuizApp() {
                 </div>
               </div>
             ))}
-            {savedQuizzes.length === 0 && (
-                <div className="col-span-full text-center py-12 text-gray-500">
-                    You haven't saved any quizzes yet.
+            {isLoadingQuizzes ? (
+                <div className="col-span-full flex flex-col items-center justify-center py-16 gap-4">
+                    <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+                    <p className="text-gray-400 text-sm">Loading your quizzes...</p>
                 </div>
-            )}
+            ) : savedQuizzes.length === 0 ? (
+                <div className="col-span-full text-center py-12 text-gray-500">
+                    You haven&apos;t saved any quizzes yet.
+                </div>
+            ) : null}
           </div>
         </div>
       </div>
